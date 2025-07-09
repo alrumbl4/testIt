@@ -6,7 +6,9 @@ import { defineConfig, devices } from '@playwright/test';
  * https://github.com/motdotla/dotenv
  */
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env' });
+if (!process.env.CI) {
+  dotenv.config({ path: '.env' });
+}
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -37,6 +39,11 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    
+    env: {
+      TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
+      TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD
+    }
   },
 
   /* Configure projects for major browsers */
