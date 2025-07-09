@@ -51,6 +51,9 @@ test.describe('Архивация проекта', () => {
 
   test.afterEach(async ({ app }) => {
     //TODO: Заменить на API
+    //TODO: Подумать как можно убрать доп ожидание
+    await app.page.waitForTimeout(1000)
+    await app.projectPage.waitToDisappearToast()
     await app.projectPage.header.clickArchiveButtton()
     await app.archivePage.clickDeleteButton()
     await app.deleteProjectModal.clickDeleteButton()

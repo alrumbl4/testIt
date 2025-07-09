@@ -21,6 +21,9 @@ test.describe('Создание конфигурации', () => {
 
   test.afterEach(async ({ app }) => {
     //TODO: Заменить на API
+    //TODO: Подумать как можно убрать доп ожидание
+    await app.page.waitForTimeout(1000)
+    await app.projectPage.waitToDisappearToast()
     await app.projectSettingPage.header.clickProjectButton()
     await app.projectPage.clickArchiveButton()
     await app.archiveProjectModal.clickYesToArchiveButton()
@@ -60,6 +63,9 @@ test.describe('Удаление конфигурации', () => {
 
   test.afterEach(async ({ app }) => {
     //TODO: Заменить на API
+    //TODO: Подумать как можно убрать доп ожидание
+    await app.page.waitForTimeout(1000)
+    await app.projectPage.waitToDisappearToast()
     await app.projectSettingPage.header.clickProjectButton()
     await app.projectPage.clickArchiveButton()
     await app.archiveProjectModal.clickYesToArchiveButton()
