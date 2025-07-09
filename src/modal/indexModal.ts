@@ -1,0 +1,7 @@
+export * from './newProject.modal'
+export * from './trialPeriod.modal'
+export * from './archiveProject.modal'
+export * from './restoreProject.modal'
+export * from './deleteProject.modal'
+export * from './newConfigurations.modal'
+export * from './deletingСonfiguration.modal'
