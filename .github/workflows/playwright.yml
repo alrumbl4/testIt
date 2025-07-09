@@ -1,4 +1,4 @@
-name: pw tests
+name: pw testsMore actions
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   e2eTests:
+    environment: MySecret
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -25,15 +26,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Запустить PW
-        run: npm run test
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        continue-on-error: true
-        with:
-          name: test-results
-          path: test-results
-          retention-days: 20
+        run: npx playwright test
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -74,8 +67,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Render notifications config
+        run: |
+          mkdir -p notifications/tmp
+          REPORT_LINK="https://alrumbl4.github.io/academybugs/$GITHUB_RUN_NUMBER/index.html"
+          sed \
+            -e "s|\$TELEGRAM_BOT_TOKEN|${{ secrets.TELEGRAM_BOT_TOKEN }}|g" \
+            -e "s|\$TELEGRAM_CHAT_ID|${{ secrets.TELEGRAM_CHAT_ID }}|g" \
+            -e "s|\$REPORT_LINK|$REPORT_LINK|g" \
+            notifications/telegram.json > notifications/tmp/config.json
+        shell: bash
+
       - name: Send Telegram notification
         run: |
-          export TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
-          export TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}  
-          java -DconfigFile=notifications/telegram.json -jar notifications/allure-notifications-4.9.0.jar
+          java "-DconfigFile=notifications/tmp/config.json" -jar notifications/allure-notifications-4.9.0.jar
